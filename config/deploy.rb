@@ -10,9 +10,6 @@ set :scm, :git
 set :use_sudo, false
 set :deploy_to, "/home/ubuntu/www/demo_app"
 
-
-end
-
 task :do_bundle_install do
 
   run  'cd /home/ubuntu/www/demo_app/current && bundle install && rake db:migrate'
