@@ -1,14 +1,20 @@
 # config valid only for current version of Capistrano
+require 'capistrano/ext/multistage'
+
 lock '3.4.0'
 
-set :application, 'my_app_name'
-set :repo_url, 'git@example.com:me/my_repo.git'
+
+set :application, 'test_deployment'
+set :repo_url, 'git@github.com:kunal-webonise/test_cap.git'
+set :scm_passphrase, ""
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-# set :deploy_to, '/var/www/my_app_name'
+server "ec2-52-26-99-83.us-west-2.compute.amazonaws.com", :app, :web, :db, :primary => true
+set :deploy_to, '/var/www/demo_app'
+ssh_options[:forward_agent] = true
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -18,6 +24,10 @@ set :repo_url, 'git@example.com:me/my_repo.git'
 
 # Default value for :log_level is :debug
 # set :log_level, :debug
+set :stages, ["development", "production"]
+set :default_stage, "development"
+set :user, "ubuntu"
+ssh_options[:keys] = '/Users/sishaile/Downloads/madmax.pem'
 
 # Default value for :pty is false
 # set :pty, true
