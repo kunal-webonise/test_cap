@@ -59,3 +59,8 @@
 #     auth_methods: %w(publickey password)
 #     # password: 'please use keys'
 #   }
+set :user, "ubuntu"
+server "ec2-52-26-99-83.us-west-2.compute.amazonaws.com", :app, :web, :db, :primary => true
+
+ssh_options[:keys] = '/Users/sishaile/Downloads/madmax.pem'
+

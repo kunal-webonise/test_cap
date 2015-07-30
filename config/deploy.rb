@@ -1,58 +1,35 @@
 # config valid only for current version of Capistrano
+
+
+set :stages, %w(production staging)
+set :default_stage, "staging"
 require 'capistrano/ext/multistage'
+set :application, "myapp"
+set :repository, 'git@github.com:kunal-webonise/test_cap.git'
+set :scm, :git
+set :use_sudo, false
+set :deploy_to, "/home/ubuntu/www/demo_app"
 
-lock '3.4.0'
+desc "check production task"
+task :check_production do
 
-
-set :application, 'test_deployment'
-set :repo_url, 'git@github.com:kunal-webonise/test_cap.git'
-set :scm_passphrase, ""
-
-# Default branch is :master
-# ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
-
-# Default deploy_to directory is /var/www/my_app_name
-server "ec2-52-26-99-83.us-west-2.compute.amazonaws.com", :app, :web, :db, :primary => true
-set :deploy_to, '/var/www/demo_app'
-ssh_options[:forward_agent] = true
-
-# Default value for :scm is :git
-# set :scm, :git
-
-# Default value for :format is :pretty
-# set :format, :pretty
-
-# Default value for :log_level is :debug
-# set :log_level, :debug
-set :stages, ["development", "production"]
-set :default_stage, "development"
-set :user, "ubuntu"
-ssh_options[:keys] = '/Users/sishaile/Downloads/madmax.pem'
-
-# Default value for :pty is false
-# set :pty, true
-
-# Default value for :linked_files is []
-# set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
-
-# Default value for linked_dirs is []
-# set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
-
-# Default value for default_env is {}
-# set :default_env, { path: "/opt/ruby/bin:$PATH" }
-
-# Default value for keep_releases is 5
-# set :keep_releases, 5
-
-namespace :deploy do
-
-  after :restart, :clear_cache do
-    on roles(:web), in: :groups, limit: 3, wait: 10 do
-      # Here we can do anything such as:
-      # within release_path do
-      #   execute :rake, 'cache:clear'
-      # end
-    end
-  end
+if stage.to_s == "production"
+puts " \n Are you REALLY sure you want to deploy to production?"
+puts " \n Enter the password to continue\n "
+password = STDIN.gets[0..7] rescue nil
+if password != 'mypasswd'
+puts "\n !!! WRONG PASSWORD !!!"
+exit
+end
 
 end
+
+end
+
+task: bundle_install_karo do
+
+  run  'echo "bundling" cd /home/ubuntu/www/demo_app/current && bundle install'
+end
+
+before "deploy", "check_production"
+after 'deploy', 'bundle_install_karo'
