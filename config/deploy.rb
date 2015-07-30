@@ -26,7 +26,7 @@ end
 
 end
 
-task: bundle_install_karo do
+task :bundle_install_karo do
 
   run  'echo "bundling" cd /home/ubuntu/www/demo_app/current && bundle install'
 end
