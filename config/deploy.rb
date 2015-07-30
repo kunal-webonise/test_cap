@@ -28,7 +28,7 @@ end
 
 task :bundle_install_karo do
 
-  run  'cd /home/ubuntu/www/demo_app/current && bundle install && rake db:create'
+  run  'cd /home/ubuntu/www/demo_app/current && bundle install && rake db:migrate'
 end
 
 before "deploy", "check_production"
